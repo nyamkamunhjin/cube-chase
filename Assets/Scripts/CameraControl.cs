@@ -10,8 +10,11 @@ public class CameraControl : MonoBehaviour {
     private void Start() {
         transform.LookAt(playerTransform);
     }
+    
     void Update() {
+        
         if (playerTransform != null) {
+            
             transform.position = playerTransform.position + cameraPos;
         }
 

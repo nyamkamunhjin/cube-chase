@@ -5,21 +5,28 @@ using UnityEngine;
 public class GameSession : MonoBehaviour {
     public GameObject enemy;
     public GameObject cubic;
-    public Player player;
-    public GameObject[] enemies = new GameObject[20];
-    public GameObject[] cubics = new GameObject[4];
+    public GameObject push;
 
-    public int currentCubicIndex;
+    public Player player;
+
+    public GameObject[] enemies = new GameObject[20];
+    public GameObject[] lives = new GameObject[4];
+    public GameObject currentPush;
+
+    public int currentLifeIndex;
     public int currentEnemyIndex;
 
     private float enemySpawnTimer = 0f;
     private float enemyWaitTime = 5f;
-    private float liveSpawnTimer = 0f;
-    private float liveWaitTime = 2f;
+    private float lifeSpawnTimer = 0f;
+    private float lifeWaitTime = 2f;
+    private float pushSpawnTimer = 0f;
+    private float pushWaitTime = 6f;
 
     private void Start() {
         spawnEnemies();
         spawnLives();
+        spawnPush();
     }
 
     private void Update() {
@@ -28,16 +35,29 @@ public class GameSession : MonoBehaviour {
         if (enemySpawnTimer < enemyWaitTime) {
             enemySpawnTimer += Time.deltaTime;
         } else {
-            rePoolEnemy();
+            // rePoolEnemy();
+            bool state = enemies[currentEnemyIndex].GetComponent<Enemy>().isAlive;
+            rePool(ref enemies, ref currentEnemyIndex, state, ref enemySpawnTimer, ref enemyWaitTime, 25f, 35f, 3f, 7f);
         }
         #endregion 
 
         #region spawn lives
-        if(liveSpawnTimer < liveWaitTime) {
-            liveSpawnTimer += Time.deltaTime;
+        if (lifeSpawnTimer < lifeWaitTime) {
+            lifeSpawnTimer += Time.deltaTime;
         } else {
             rePoolLives();
+            // bool state = lives[currentLifeIndex].GetComponent<Enemy>().isAlive;
+            // rePool(ref lives, ref currentLifeIndex, state, ref lifeSpawnTimer, ref lifeWaitTime, 5f, 15f, 10f, 15f);
         }
+        #endregion
+
+        #region spawn push power up
+        if(pushSpawnTimer < pushWaitTime) {
+            pushSpawnTimer += Time.deltaTime;
+        } else {
+            rePoolPush();
+        }
+
         #endregion
     }
 
@@ -50,68 +70,71 @@ public class GameSession : MonoBehaviour {
     void spawnEnemies() {
         for (int i = 0; i < enemies.Length; i++) {
             enemies[i] = Instantiate(enemy, new Vector3(0f, -10f, 0f), Quaternion.identity);
-            enemies[i].SetActive(false);
+            // enemies[i].SetActive(false);
+            StaticFunctions.setEnemyState(enemies[i], false);
         }
         currentEnemyIndex = 0;
     }
 
     void spawnLives() {
-        for(int i = 0; i < cubics.Length; i++) {
-            cubics[i] = Instantiate(cubic, new Vector3(0f, -10f, 0f), Quaternion.identity);
-            cubics[i].SetActive(false);
+        for (int i = 0; i < lives.Length; i++) {
+            lives[i] = Instantiate(cubic, new Vector3(0f, -10f, 0f), Quaternion.identity);
+            lives[i].SetActive(false);
         }
-        currentCubicIndex = 0;
+        currentLifeIndex = 0;
+    }
+
+    void spawnPush() {
+        currentPush = Instantiate(push, new Vector3(0f, -10f, 0f), Quaternion.identity);
     }
 
     void rePoolLives() {
-        float x = spawnRandomizer(player.transform.position.x + Random.Range(25f, 35f));
-        float z = spawnRandomizer(player.transform.position.z + Random.Range(25f, 35f));
-        cubics[currentCubicIndex].transform.position = new Vector3(x, 0.5f, z);
-        cubics[currentCubicIndex].transform.gameObject.SetActive(true);
+        if (!lives[currentLifeIndex].GetComponent<Life>().isAttached) {
 
-        currentCubicIndex++;
+            float x = spawnRandomizer(player.transform.position.x + Random.Range(5f, 15f));
+            float z = spawnRandomizer(player.transform.position.z + Random.Range(5f, 15f));
 
-        if (currentCubicIndex >= cubics.Length) {
-            currentCubicIndex = 0;
+            lives[currentLifeIndex].transform.position = new Vector3(x, 0.5f, z);
+            lives[currentLifeIndex].transform.gameObject.SetActive(true);
+            currentLifeIndex++;
+
+            if (currentLifeIndex >= lives.Length) {
+                currentLifeIndex = 0;
+            }
         }
 
-        liveSpawnTimer = 0f;
-        liveWaitTime = Random.Range(10f, 15f);
+        lifeSpawnTimer = 0f;
+        lifeWaitTime = Random.Range(10f, 15f);
     }
 
-    void rePool(GameObject[] array, int index, float spawnTimer, float waitTime) {
-        float x = spawnRandomizer(player.transform.position.x + Random.Range(25f, 35f));
-        float z = spawnRandomizer(player.transform.position.z + Random.Range(25f, 35f));
+    // not finished
+    void rePool(ref GameObject[] array, ref int index, bool state, ref float spawnTimer, ref float waitTime, float min, float max, float rand1, float rand2) {
+        if (!state) {
+            float x = spawnRandomizer(player.transform.position.x + Random.Range(min, max));
+            float z = spawnRandomizer(player.transform.position.z + Random.Range(min, max));
 
-        array[index].transform.position = new Vector3(x, 0.5f, z);
-        array[index].SetActive(true);
+            array[index].transform.position = new Vector3(x, 0.5f, z);
+            StaticFunctions.setEnemyState(array[index], true);
 
-        index++;
+            index++;
 
-        if (index >= array.Length) {
-            index = 0;
+            if (index >= array.Length) {
+                index = 0;
+            }
+
+            spawnTimer = 0f;
+            waitTime = Random.Range(rand1, rand2);
         }
-
-        spawnTimer = 0f;
-        waitTime = Random.Range(1f, 3f);
-
     }
 
-    void rePoolEnemy() {
-        float x = spawnRandomizer(player.transform.position.x + Random.Range(25f, 35f));
-        float z = spawnRandomizer(player.transform.position.z + Random.Range(25f, 35f));
+    void rePoolPush() {
+        float x = spawnRandomizer(player.transform.position.x + Random.Range(10f, 20f));
+        float z = spawnRandomizer(player.transform.position.z + Random.Range(10f, 20f));
 
-        enemies[currentEnemyIndex].transform.position = new Vector3(x, 0.5f, z);
-        enemies[currentEnemyIndex].transform.gameObject.SetActive(true);
+        currentPush.transform.position = new Vector3(x, 0.1f, z);
+        currentPush.gameObject.SetActive(true);
 
-        currentEnemyIndex++;
-
-        if (currentEnemyIndex >= enemies.Length) {
-            currentEnemyIndex = 0;
-        }
-
-        enemySpawnTimer = 0f;
-        enemyWaitTime = Random.Range(3f, 7f);
+        pushSpawnTimer = 0f;
+        pushWaitTime = Random.Range(10f, 15f);
     }
-
 }

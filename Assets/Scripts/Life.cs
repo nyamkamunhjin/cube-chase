@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cubic : MonoBehaviour {
+public class Life : MonoBehaviour {
     // Update is called once per frame
     public bool isAttached = false;
     public GameSession gameSession;
@@ -31,7 +31,7 @@ public class Cubic : MonoBehaviour {
     private void OnCollisionEnter(Collision other) {
         print(other.collider.tag);
         if (other.collider.tag == "player") {
-            if(!isAttached) {
+            if (!isAttached) {
                 isAttached = true;
                 gameSession.player.lives.Add(this);
                 myIndex = gameSession.player.lives.Count - 1;
