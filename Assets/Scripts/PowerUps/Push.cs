@@ -12,7 +12,7 @@ public class Push : MonoBehaviour {
     private void OnCollisionEnter(Collision other) {
         print(other.collider.tag);
         if (other.collider.tag == "player") {
-            player = other.collider.GetComponent<Player>();
+            player = GameSession.player;
             player.speed += bonusSpeed;
             // initialSpeed = bonusSpeed;
             player.currentRotation = transform.eulerAngles.y;

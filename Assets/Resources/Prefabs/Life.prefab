@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8636011807703719205}
   - component: {fileID: 3360185358370302274}
   - component: {fileID: 8390769071515357405}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,4 +124,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAttached: 0
-  gameSession: {fileID: 0}

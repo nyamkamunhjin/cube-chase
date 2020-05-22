@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour {
     // Start is called before the first frame update
@@ -8,25 +9,19 @@ public class Player : MonoBehaviour {
     public float rotateSpeed = 100f;
     public float originalSpeed;
     public Shader flickerShader;
-
+    public List<Life> lives = new List<Life>();
     public float currentRotation = 90;
 
     private Material originalMat;
     private BoxCollider box;
     private MeshRenderer rend;
-
     private float timer = 0;
-
     private ParticleSystem explosion;
-    private GameSession gameSession;
-
     private bool invincibleMode = false;
 
-    public List<Life> lives = new List<Life>();
 
     void Awake() {
-        gameSession = FindObjectOfType<GameSession>();
-        gameSession.player = this;
+        GameSession.player = this;
     }
 
     private void Start() {
@@ -80,9 +75,7 @@ public class Player : MonoBehaviour {
         }
         #endregion
 
-        #region push power up
 
-        #endregion
     }
 
     private void OnCollisionEnter(Collision other) {
@@ -105,14 +98,14 @@ public class Player : MonoBehaviour {
 
         } else {
             explosion.Play();
-            StaticFunctions.setPlayerState(transform.gameObject, false);
+            GameSession.setPlayerState(transform.gameObject, false);
         }
     }
 
     private void invincible(float duration) {
         rend.material = new Material(flickerShader);
         rend.material.SetColor("_Color", originalMat.GetColor("_BaseColor"));
-        print(originalMat.GetColor("_BaseColor"));
+        // print(originalMat.GetColor("_BaseColor"));
         box.enabled = false;
 
         timer += Time.deltaTime;
@@ -122,6 +115,10 @@ public class Player : MonoBehaviour {
             timer = 0f;
             rend.material = originalMat;
         }
+    }
+
+    private void OnDisable() {
+        speed = originalSpeed;
     }
 
 }

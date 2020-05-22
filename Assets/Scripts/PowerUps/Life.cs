@@ -5,12 +5,10 @@ using UnityEngine;
 public class Life : MonoBehaviour {
     // Update is called once per frame
     public bool isAttached = false;
-    public GameSession gameSession;
 
     private int myIndex;
 
     private void Awake() {
-        gameSession = FindObjectOfType<GameSession>();
     }
 
     void Update() {
@@ -22,19 +20,19 @@ public class Life : MonoBehaviour {
 
     void followHandler() {
         if (myIndex == 0) {
-            follow(gameSession.player.transform);
+            follow(GameSession.player.transform);
         } else {
-            follow(gameSession.player.lives[myIndex - 1].transform);
+            follow(GameSession.player.lives[myIndex - 1].transform);
         }
     }
 
     private void OnCollisionEnter(Collision other) {
-        print(other.collider.tag);
+        // print(other.collider.tag);
         if (other.collider.tag == "player") {
             if (!isAttached) {
                 isAttached = true;
-                gameSession.player.lives.Add(this);
-                myIndex = gameSession.player.lives.Count - 1;
+                GameSession.player.lives.Add(this);
+                myIndex = GameSession.player.lives.Count - 1;
             }
         }
     }
@@ -43,7 +41,7 @@ public class Life : MonoBehaviour {
         transform.position = Vector3.MoveTowards(
             transform.position,
             target.position - target.forward,
-            gameSession.player.speed * Time.deltaTime
+            GameSession.player.speed * Time.deltaTime
         );
     }
 }
