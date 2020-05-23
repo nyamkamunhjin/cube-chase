@@ -14,7 +14,10 @@ public class Menu : MonoBehaviour {
     public Button ExitButton;
 
     private void Start() {
-        Application.targetFrameRate = 60;
+#if UNITY_ANDROID
+        // Application.targetFrameRate = 60;
+#endif
+
         InfiniteModeButton.onClick.AddListener(InfiniteMode);
         PortalModeButton.onClick.AddListener(PortalMode);
         BossFightModeButton.onClick.AddListener(BossFightMode);
@@ -28,7 +31,7 @@ public class Menu : MonoBehaviour {
     void InfiniteMode() {
         print("InfiniteModeButton Pressed.");
         GameSession.startInfiniteMode();
-        
+
     }
 
     void PortalMode() {

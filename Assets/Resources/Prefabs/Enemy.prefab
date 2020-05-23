@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  rotationSpeed: 1
+  rotationSpeed: 1.2
   isAlive: 0
 --- !u!65 &7493519408039252473
 BoxCollider:

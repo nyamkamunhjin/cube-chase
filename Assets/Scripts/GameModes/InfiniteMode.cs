@@ -8,6 +8,10 @@ public class InfiniteMode : MonoBehaviour {
     public GameObject push;
     public GameObject coin;
 
+    public float playerSpeed = 13;
+    public float enemySpeed = 15;
+
+
     public EnemySession enemySession;
     public LifeSession lifeSession;
     public PushSession pushSession;
@@ -47,9 +51,10 @@ public class InfiniteMode : MonoBehaviour {
     private void startInfiniteMode() {
     
         GameSession.setPlayerState(GameSession.player.gameObject, true);
+        GameSession.player.speed = playerSpeed;
         isStarted = true;
 
-        enemySession = new EnemySession(enemy);
+        enemySession = new EnemySession(enemy, enemySpeed);
         lifeSession = new LifeSession(life);
         pushSession = new PushSession(push);
         coinSession = new CoinSession(coin);

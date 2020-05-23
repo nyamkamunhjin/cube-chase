@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySession : BaseSession {
 
-    public EnemySession(GameObject obj) {
+    public EnemySession(GameObject obj, float speed) {
         objects = new GameObject[10];
 
         waitTime = 3f;
@@ -14,7 +14,7 @@ public class EnemySession : BaseSession {
         rand1 = 3f;
         rand2 = 4f;
 
-        spawn(obj);
+        spawn(obj, speed);
     }
     
     public static void setEnemyState(GameObject enemy, bool value) {
@@ -28,9 +28,10 @@ public class EnemySession : BaseSession {
         enemy.GetComponent<Rigidbody>().detectCollisions = value;
     }
 
-    public new void spawn(GameObject obj) {
+    public new void spawn(GameObject obj, float speed) {
         for (int i = 0; i < objects.Length; i++) {
             objects[i] = GameObject.Instantiate(obj, new Vector3(0f, -10f, 0f), Quaternion.identity);
+            objects[i].GetComponent<Enemy>().speed = speed;
             // objects[i].SetActive(false);
             setEnemyState(objects[i], false);
         }
