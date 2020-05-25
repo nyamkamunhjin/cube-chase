@@ -8,39 +8,17 @@ public class GameSession : MonoBehaviour {
     public static Player player;
     public static int kills = 0;
     public static int coins = 0;
-    public static Buttons UIs;
 
     public static event Action enemyDeathEvent;
     public static event Action coinPickUpEvent;
     public static event Action playerDeathEvent;
 
-    private Gameplay gameplayUI;
-
-    private void Start() {
-        UIs = FindObjectOfType<Buttons>();
-        gameplayUI = FindObjectOfType<Gameplay>();
-    }
-
     public static void startInfiniteMode() {
         FindObjectOfType<InfiniteMode>().enabled = false;
         FindObjectOfType<InfiniteMode>().enabled = true;
-        UIs.SetMenuUIState(false);
-        UIs.SetGameplayUIState(true);
-        UIs.SetGameOverUIState(false);
-
-    }
-
-    public static void GotoGameOver() {
-
-        UIs.SetMenuUIState(false);
-        UIs.SetGameplayUIState(false);
-        UIs.SetGameOverUIState(true);
-    }
-
-    public static void GotoMenu() {
-        UIs.SetMenuUIState(true);
-        UIs.SetGameplayUIState(false);
-        UIs.SetGameOverUIState(false);
+        Buttons.UIs.SetMenuUIState(false);
+        Buttons.UIs.SetGameplayUIState(true);
+        Buttons.UIs.SetGameOverUIState(false);
 
     }
 
@@ -50,11 +28,18 @@ public class GameSession : MonoBehaviour {
         FindObjectOfType<BossFightMode>().enabled = false;
         kills = 0;
         coins = 0;
+
+        GameSession.player.speed = GameSession.player.originalSpeed;
+        GameSession.player.currentRotation = 0;
+        GameSession.player.transform.position = GameSession.initialPos;
+        GameSession.player.transform.rotation = Quaternion.identity;
     }
 
     public static void setPlayerState(GameObject player, bool value) {
         if (!value) {
-            GotoGameOver();
+            Buttons.GotoGameOver();
+            SessionReset();
+
             if (playerDeathEvent != null) {
                 playerDeathEvent();
             }

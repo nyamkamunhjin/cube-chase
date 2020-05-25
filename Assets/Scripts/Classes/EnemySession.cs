@@ -28,7 +28,7 @@ public class EnemySession : BaseSession {
         enemy.GetComponent<Rigidbody>().detectCollisions = value;
     }
 
-    public new void spawn(GameObject obj, float speed) {
+    public void spawn(GameObject obj, float speed) {
         for (int i = 0; i < objects.Length; i++) {
             objects[i] = GameObject.Instantiate(obj, new Vector3(0f, -10f, 0f), Quaternion.identity);
             objects[i].GetComponent<Enemy>().speed = speed;

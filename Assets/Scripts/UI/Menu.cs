@@ -47,7 +47,7 @@ public class Menu : MonoBehaviour {
     }
 
     void Shop() {
-
+        Buttons.GotoShop();
     }
 
     void About() {

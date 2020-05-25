@@ -118,7 +118,8 @@ public class Player : MonoBehaviour {
     }
 
     private void OnDisable() {
-        speed = originalSpeed;
+        // speed = originalSpeed;
+        // currentRotation = 0;
     }
 
 }

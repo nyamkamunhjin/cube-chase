@@ -27,8 +27,8 @@ public class GameOver : MonoBehaviour {
     void onPlayerDeath() {
         print("onPlayerDeath called!");
         PlayerData.addToCoins(GameSession.coins);
-        coins.text = "Coins collected: " + PlayerData.getCoins();
-        score.text = "Enemies Destroyed: " + GameSession.kills;
+        coins.text = "Total coins: " + PlayerData.getCoins();
+        score.text = "score: " + GameSession.kills;
 
         if(GameSession.kills > PlayerData.getHighScore()) {
             PlayerData.setHighScore(GameSession.kills);
@@ -38,7 +38,7 @@ public class GameOver : MonoBehaviour {
 
     void Menu() {
         GameSession.SessionReset();
-        GameSession.GotoMenu();
+        Buttons.GotoMenu();
     }
 
     void Replay() {

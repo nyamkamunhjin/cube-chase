@@ -7,7 +7,7 @@ public class CameraControl : MonoBehaviour {
 
     public Vector3 cameraPos = new Vector3(0f, 25f, -10f);
 
-    private void Start() {
+    private void OnEnable() {
         transform.LookAt(playerTransform);
     }
     

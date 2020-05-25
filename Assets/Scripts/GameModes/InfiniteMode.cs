@@ -58,8 +58,6 @@ public class InfiniteMode : MonoBehaviour {
         lifeSession = new LifeSession(life);
         pushSession = new PushSession(push);
         coinSession = new CoinSession(coin);
-
-        GameSession.player.transform.position = GameSession.initialPos;
     }
 
     private void OnDisable() {
@@ -68,7 +66,7 @@ public class InfiniteMode : MonoBehaviour {
 
     private void resetGame() {
 
-        FindObjectOfType<Player>().enabled = false;
+        // FindObjectOfType<Player>().enabled = false;
         isStarted = false;
 
         enemySession.reset();
