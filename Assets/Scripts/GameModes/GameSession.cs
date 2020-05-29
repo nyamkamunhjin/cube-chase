@@ -8,10 +8,20 @@ public class GameSession : MonoBehaviour {
     public static Player player;
     public static int kills = 0;
     public static int coins = 0;
+    public static Skin currentSkin;
 
     public static event Action enemyDeathEvent;
     public static event Action coinPickUpEvent;
     public static event Action playerDeathEvent;
+
+
+    private void Start() {
+        if(GameSession.currentSkin) {
+            // load bought skin or default
+        }
+
+        Shop.loadCurrentSkin();
+    }
 
     public static void startInfiniteMode() {
         FindObjectOfType<InfiniteMode>().enabled = false;
@@ -38,7 +48,7 @@ public class GameSession : MonoBehaviour {
     public static void setPlayerState(GameObject player, bool value) {
         if (!value) {
             Buttons.GotoGameOver();
-            SessionReset();
+            // SessionReset();
 
             if (playerDeathEvent != null) {
                 playerDeathEvent();

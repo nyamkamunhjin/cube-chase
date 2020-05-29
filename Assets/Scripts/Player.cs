@@ -24,11 +24,14 @@ public class Player : MonoBehaviour {
         GameSession.player = this;
     }
 
+    private void OnEnable() {
+        rend = GetComponent<MeshRenderer>();
+        originalMat = rend.material;
+    }
+
     private void Start() {
         originalSpeed = speed;
         box = GetComponent<BoxCollider>();
-        rend = GetComponent<MeshRenderer>();
-        originalMat = rend.material;
         explosion = GetComponent<ParticleSystem>();
     }
 
@@ -104,7 +107,7 @@ public class Player : MonoBehaviour {
 
     private void invincible(float duration) {
         rend.material = new Material(flickerShader);
-        rend.material.SetColor("_Color", originalMat.GetColor("_BaseColor"));
+        // rend.material.SetColor("_Color", originalMat.GetColor("_BaseColor"));
         // print(originalMat.GetColor("_BaseColor"));
         box.enabled = false;
 
