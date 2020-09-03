@@ -18,29 +18,33 @@ public class Shop : MonoBehaviour {
     public Button rightButton;
     public Button backButton;
 
-    private void Start() {
+    private void OnEnable() {
         buyButton.onClick.AddListener(Buy);
         leftButton.onClick.AddListener(Left);
         rightButton.onClick.AddListener(Right);
         backButton.onClick.AddListener(Back);
 
-        playerStash = PlayerData.loadUserSkins();
-        loadSkin(0);
-
+        loadSkin(index);
+        PlayerData.addToCoins(100);
     }
 
     void loadSkin(int index) {
         Skin skin = cosmetics[index];
-        playerStash = PlayerData.loadUserSkins();
+        updateUI(skin);
+        swapSkin(skin);
+    }
 
+    void updateUI(Skin skin) {
+        playerStash = PlayerData.loadUserSkins();
         skinName.text = skin.name;
         price.text = skin.price.ToString();
         coin.text = PlayerData.getCoins().ToString();
 
-        if (!checkBuyable()) {
-            buyButton.GetComponent<Image>().color = Color.red;
-        } else {
+        
+        if (checkBuyable()) {
             buyButton.GetComponent<Image>().color = Color.green;
+        } else {
+            buyButton.GetComponent<Image>().color = Color.red;
         }
 
         if (playerStash != null && playerStash.skins.Contains(skin.name)) {
@@ -51,7 +55,10 @@ public class Shop : MonoBehaviour {
             buyButton.GetComponentInChildren<TextMeshProUGUI>().text = "buy";
         }
 
-        swapSkin(skin);
+        if(PlayerData.getCurrentSkin() == skin.name) {
+            buyButton.GetComponent<Image>().color = Color.grey;
+            buyButton.GetComponentInChildren<TextMeshProUGUI>().text = "using";
+        }
     }
 
     public static void loadCurrentSkin() {
@@ -68,7 +75,7 @@ public class Shop : MonoBehaviour {
     public static void swapSkin(Skin skin) {
         GameSession.player.GetComponent<MeshFilter>().mesh = skin.skin.GetComponent<MeshFilter>().sharedMesh;
         GameSession.player.GetComponent<MeshRenderer>().material = skin.skin.GetComponent<MeshRenderer>().sharedMaterial;
-        GameSession.player.GetComponent<ParticleSystemRenderer>().material = skin.skin.GetComponent<MeshRenderer>().sharedMaterial;
+        // GameSession.player.GetComponent<ParticleSystemRenderer>().material = skin.skin.GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     bool checkBuyable() {
@@ -85,11 +92,10 @@ public class Shop : MonoBehaviour {
         } else {
             if (checkBuyable()) {
                 PlayerData.saveUserSkins(cosmetics[index]);
-                PlayerData.addToCoins(-cosmetics[index].price);
-                loadSkin(index);
+                PlayerData.addToCoins(-cosmetics[index].price); 
             }
-
         }
+        updateUI(cosmetics[index]);
 
     }
 
